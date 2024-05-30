@@ -1,0 +1,25 @@
+
+1. Start with course: [Testing Spring Boot application Primer](https://rieckpil.de/course/tsbap-high-level-overview-of-testing-spring-boot-applications) 
+	- Maven setup for testing [ARTICLE](https://rieckpil.de/maven-setup-for-testing-java-applications/)
+	- freecodecamp on JUnit5 [YOUTUBE](https://www.youtube.com/watch?v=flpmSXVTqBI)
+		- quite interesting material, 
+		- first unit tests
+		- assertions
+		- test lifecycle (BeforeAll, BeforeEach, Test, AfterEach,AfterAll)
+		- conditional executions (i.e on specific Operating system)
+		- Assumptions
+		- Repeated tests
+		- Parametrized tests
+		- Nested tests
+		- Disabled tests
+	- Testing SpringBoot application- talk [YOUTUBE](https://www.youtube.com/watch?v=Wpz6b8ZEgcU)
+		- Why we should test (to be more secure)
+		- Best candidates for unit tets are beans without any dependencies, the beans that do not rely on any other bean
+		- Too much mocks in a test might be a signal to make it an integration test
+		- Guy talked a lot on pros of MockRestServiceServer for RestTemplate, and discussing the pros of mocking on a http level instead of rest template level
+		- The same with testing repositories layer
+		- TestContainers as a way to manage docker containers lifecycle. It can start, and then shut down the container but in the meantime we can run test on our specific database
+		- Grey area is place where we want to test single unit but with connetion to the external service (like database) so we should decide what do do here (integration tests with Testcontainers were shown here)
+		- Context caching (while testing springboot can cache the context when the context of the separate classes are different)
+		- Sliced tests - springboot can help with testing a single slice of our application(Db tests, web laver tests etc) Testing persistance layer(@DataJpaTest, @DataMongoTest, @JOOQTest, JdbcTest, @DataRedisTest), web layer(WebMvcTest, WebFluxTest), @JsonTest, when using this kind of annotation we are slicing away all of the not needed context for our use case, i.e using one of persistence slice test we don't care about anything from web layer. It can make our integration test much much quicker. It will be most valuable for bigger applications
+		- STOPPED WATCHING AT SLICED TESTS, SINCE MY KNOWLEDGE IS TO LITTLE TO GAIN MORE FROM THIS AT THE TIME ---> TODO: FINISH WATCHING

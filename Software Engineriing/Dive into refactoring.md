@@ -1,0 +1,12 @@
+
+- Types of code smell:
+	- bloaters:
+		- extract method, 
+	- object-oriented-abusers
+	- change-preventers
+	- couplers
+- Refactoring techniques
+	- composing methods
+	- moving features between objects
+	- organizing data
+	- simplify conditionals expressions
