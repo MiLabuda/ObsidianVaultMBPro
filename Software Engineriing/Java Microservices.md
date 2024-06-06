@@ -18,3 +18,5 @@ Good tolls/libraries for
 - asynchronous: ActiveMQ, RabbitMQ, Kafka
 - testing:  [Testcontainers](https://www.testcontainers.org/),  [Junit](https://junit.org/junit5/), [TestNG](https://testng.org/doc/) to [AssertJ](https://joel-costigliola.github.io/assertj/) and [Mockito](https://site.mockito.org/).
 
+
+1 Richardson, C. (2019). Microservice Patterns: With Examples in Java. New York: Manning Publications.

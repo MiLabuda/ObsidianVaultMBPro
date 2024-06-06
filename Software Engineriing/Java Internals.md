@@ -72,27 +72,76 @@
 	- In variables: 
 		- Variables marked as final can't be reasigned. Once a final variable is initialized. it can't be altered.
 13. Static keyword 
-    The static keyword in Java is used for memory management
+    The static keyword in Java is used mostly for memory management. It goes with variables, methods, blocks, and nested classes.
+    - static variable - there is only one copy of static variable per class, no matter how many objects are created (stored in static memory, not heap)
+    - static method - you can call static method without creating instance of a class. static methods can only directly call other static methods or static variables.
+    - static block
+    - static nested class
+14. Primitive types vs Object types
+	- SEE 3.
+	- In java there are two types of data types:
+		- primitives: byte, short, int, long, float, double, boolean, char
+		- they're passed by value, meaning that they're used as method argument, a new copy of the value is created
+		- they have default values. i.e int= 0, boolean=false
+		- object/reference data types:
+		- object types are actual objects in memory, they have methods and fields
+		- they're passed by reference meaning that when they are used as a method argument, the reference to the object is passed. Not the object itself
+15. Types of collections 
+	- Collection - root interface in the hierarchy of Java Collections. (it declares basics like: add(), remove(), clear(), isEmpty(), size())
+	- List - extends Collection, represents Ordered Collection(a sequence). List can contain duplicate elements. user has control over where in the list each element are inserted (examples: ArrayList, LinkedList, Vector)
+		- ArrayList - resizable array. Fast access, slow insertions and removals
+		- LinkedList - slow access, fast insertions and removals
+	- Set - extends Collection, represent a collection does not contains duplicates nor has any order (examples: HashSet, LinkedHashSet, TreeSet)
+		- HashSet - hash table implementation of set, it doesn't maintain any order and allows null values
+		- LinkedHashSet - hash table + linked list. It maintains insertions order
+		- TreeSet - the elements are orders using heir natural ordering, or by a comparator provided at set creation time
+	- Map - does not extend Collection. It represents an object that maps keys to values. Map cannot contain duplicate keys, each key can map to only one value (examples: HashMap, LinkedHashMap, TreeMap, HashTable)
+		- HashMap - hash table implementation of map, it doesn't mantain any order and allows null for both key and values
+		- LinkedHashMap: this is hash table + linked list implementation of map, with predictable iteration order
+	- Queue - extends collection 
+16. How does internet work?
+    - This is a system of inter connected devices that communicate with each other using a set of protocols know as TCP/IP
+    - When you connectto the internet your computer joins networrk, allowing it to communicate with other computers, this connections is usually facilliated by an ISP (Internet Service Privider)
+    - Domain Name System (DNS) When you type an url into your browser. DNS dooing lookup. DNS translates the human readable web address into an IP address
+    - HTTP reqquest, the browser can send the request with specified method (GET,POST, itp)
+    - server processing
+    - http response
+17. Immutable - what means
+    - immutable object is one wose state cannot be changed after it is created. Once a constructor for an immutable object completes the object is guaranteed to remain constant. this can be very helpfull in concurrent applications. Immutables are thread safe\
+	    - all properties are final and private
+	    - there are no setter methods
+	    - if a field is a mutable object, then it must be defensively copied when passed between the class and its caller.
+	    - String, Integer, Double, Character, Boolean are immutables
+18. Java is being compiled into what
+	- java source code is compiled into bytecode. Bytecode is platform independent representation of the source code that can be executed by JVM
+	- It can be compiled into JAR (Java ARchive) or WAR(Web Application aRchive) file for distribution
+	- Spring boot is flexible and app can be compiled both to JAR and WAR
+19. Does primitive types has methods?
+    - No they do not!
+20. Polymorphism vs inheritance
+    - Inheritance is mechanism that allows one class to acquire the fields and methods of another class. Acquired fields and methods are know as superclass. Inheritance is used for code reusability. Java does not support multi-inheritance
+    - Polymorphism is mechanism to allow objects to take on may forms. Parent class can reference 
+    - --------------------
+21. How acn we compare variables in java
+    - primitives might be compared with relational operators (=, !=, >, <)
+    - objects should be compared using equals() method to check if they are equal, this method should be overriden in the classes for correct comparisons
+    - Objects.equals() method can be used which is null safe
+    - comparing two optionals also would be null safe
+    - apacheCommons ObjectiveUtils.equals()
+22. After what class every other class in Java inherit?
+    - in Java every class inherit after Object class 
+    - it provides several methods that are universal to all objects, such as equals(), hashCode(), getClass(), toString()
 
-
-* czym się różnicą typy prymitywne od obiektowych 
-* typy kolecji tzn set, list, map oraz ich implementacje np hashset hashmap itp 
-* jak działa internet xd 
-* co to immutable 
 * jak działa tworzenie stringa 
 * warto wiedzieć jak java zarządza pamięcia i np poczytać o StringPool 
-* Garbage Collectors 
 * string buffer vs string builder 
-* jak zrobić klasę immutable 
-* do czego się kompiluje jave 
-* czy typy prymitywne mają metody 
-* hash code i equals 
-* polimorfiz dziedziczneie 
+
+
+
 * roznice pomiedzy interface a klasa abstrakcyjna
 * exceptiony 
-* po czym dziedziczy kazda klasa w javie 
 * JVM 
-* jak można porówynwać zmienne w javie 
+
 * co to generyki 
 * coś tam poczytaj o wątkąch 
 * o SQL pytali 
@@ -110,10 +159,10 @@
 * lazy loadig 
 * relacje 
 * co to kopozycja 
-* Aaa i najważniejsze prakycznie wszędzie pytali jak działa internet 
+
 * Protokół HTTP ogarnąc jak działa
 
-13. How does the garbage collectors work in Java? 
+23. How does the garbage collectors work in Java? 
 	- In Java JVM manages the memory by garbage collection. This process identifies and kills not used objects
 	------------_EXPAND ON THE TOPIC----------
 10. GO FURTHER WITH this https://github.com/Devinterview-io/java-interview-questions

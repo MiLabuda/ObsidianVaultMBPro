@@ -145,9 +145,106 @@ I started exploring this topic because I found an urge to build my microservices
 		- SEPARATE WAYS PATTERNS
 		- Communication issues- when the communication issues based on organization size or internal politics comes in we may want to resign from collabaoration with other bounded contexts
 		- Generic subdomains- sometimes it makes more sense and its cheaper to implement something in each bounded context instead of exposng it as a service. I.e logging. There is no much sense in espoxing logging as a separate service when it can be done from each bounded context
+	5. Implementing Simple business logic
+		- transaction script - organizes business logic by procedures where each procedure handles a single request from the presentation
+		- example transsaction script:
+			- addItem(String item)
+			- setPriority()
+			- list()
+			- assign(String item)
+		- Authors discussed bad implementation of transactions script(which is the easiest way of writing a software, which is not that easy.)
+			- i.e implementing two. separa actions, can be tricky while we cannot guarantee the transaction (not all db are supporting this, and also sometimes we don't know what storage system will be used)
+			- 1 solution is to try make everything indepotent. Like requesting a visits number and then passing the increaesed visit number as an param, which will always pass the correct value.
+			- 2 solution: optimistic concurrency control. We will call the source for a visits number and will pass it as a param and will update the value ONLY if the value in db is the same as the passed one.
+		  - Transactions script is being discussed as an anti pattern sometimes, it should not be used for core subdomain, It will quickly turn into big bull of mud when complexity grows.
+		  - Active record- an object that wraps a row in a database table of view, encapsulates the database access, and adds domain logic on that data.
+		  - These objects also implements the CRUD operations that means that they're always tight coupled with ORM of some sort.
+		  - Accordingly as the transaction scripts it doesn't work well with core subdomain and should go rather in supporting subdomain.
+		  - It is also know as a anemic domain model anti-pattern, but author would prefer not to treat it as an antipattern. Its only a tool. he says there is nothing wrong with using active records when logic is simple
+	6. Tacling Complex Business Logic
+		- A domain model is an object model of the domain that incorporates both behaviour and data!
+		- DDD's tactical patterns - Aggregates, Value Objects, Domain Events, Domain Services - are the building blocks of such an object model.
+		- Because the logic behind the system we want to implement is already complex, we should avoid additional complexity in our domain models. It should be free of infrastructure code or technological concerns (no database conections, etc. --> It should be just POJOs)
+		- We should aim for using Value Objects 
+			 - no problems with wrong data (fail fast)
+			- more options for validation, the validation is in the value objects
+			- i.e we can gather some rules regarding specific value object and manipulate it easily like Height and we can implement methods for creating height based on metric system or imperial and even compare these two.
+			- Good example of value object that is always created as new one is JAva String class. It;s always creating new instance, not updating the state of former object
+			- As a rule of thumb we should try to use Value Objects whenever we can. It;s a good practice to use all of the pros of this approach. The Value Object should be used for Domains elements that describe properties of other objects.
+		- Entities - opposite to value object. Entity require an explicit identification field to distinguish between the different instances of the entity. I.e person can't have only name property, it needs to have some identifier, because two persons with the same name are still different people.
+		- Entities ARE NOT IMMUTABLE and are expected to change (we implement logic for entity to change)
+		- Aggregate is an entity. But to be completly honest is so much moe than just entity. Aggregate responsibility as a pattern is to keep the data consistent
+		- Consistency enforcement is a key characteristic of an aggregate. Aggregate draws the boundary between the aggregate and outer scope. To aggregate goes all the modification tham means that it works on keeping it consistent and in line with business rules. 
+		- Only aggregate logic is allowed to modify state, everything external is allowed only to read the state
+		- Aggregate is exposed as public interface, which is referred as an "command"
+			 - It can be implemented in two ways:
+			- the public interface can be implemented as an public plan method of the aggregate object
+			- Command can be represented as a parameter object that encapsulates the input required for executin command
+		- Aggregate encapsulate the rules that MUST be correct instantly
+		- Value objects we compare based on values and aggregates based on its identity
+		- It is crucial to ensure that the database we work with support the concurency management. When we want to do any action on the object in database we will check if the version after update is what we expect and only then commit the changes. Otherwise we will rollback and return error
+		- Aggregate is a place of transactions boundary. Any changes made to the aggregate must be commited or rollbacked
+		- The boundaries only occur individually. One aggregate per database transaction. If we need to use many aggregates within one database transaction than it's bad and we need to redesign our architecture
+		- Hierarchy of Entities. We don't use Entities as individual pattern. Only as a part of Aggregate
+		- Aggregate is named that way because it gathers or business entities and value objects that belongs to the same transaction boundary
+		- Since all objects contained by and aggregate share the same transactional boundary the performance issue can erase when aggregate grows too large.
+		- Aggregate is a place for strongly consistent data/logic. If something can be "eventually" consistent then it's out of aggregate boundary
+		- in Domain Model we can have something like this: ![[Pasted image 20240604204352.png]] List of messages belongs directly to the ticket, that's why it a list of Messages, but list of products and users are not so closely related that's why they're referenced only by Id's
+		- To decide whether entity belongs to aggregate, we should examine whether it contains any businness logic that can lead to an invalid state of our system.
+		- Aggregate Root is like interface for executing any changes to the aggregate
+		- Domain events is the second form of communicating aggregates with outer world. Domain events also belong to the aggregate and can be published from within the aggregate, and somwhere else maybe even in other microservice someone can subscribe to some of our events.
+		- Domain service is used when some logic doesn't belong to particular aggregate, or belongs to more than 1 aggregate, when we create domain service. (i understand it's very similar to service class in layered architecture)
+	7.  Modeling the dimension of time
+		   - Event sourcing as a way to add time dimension into our domain models, In example statuses of a ticket can be displayed as events and therefore we gat all of the information regarding the particular event in time
+		   - For the event sourcing patterns, all changes to the object state should be represented and persisted as events
+		   - Event store as a database for events
+		   - Event sourced domain model which is explicitly stated that we are using event sourcing to represent changes in the lifecycles of the domain model's aggregates
+		   - Event sourcing - advantages:
+			   - time-travelling - domain events can be used to displaying the current state it can be also used to retrieve any past state of an aggregate. It's good for inspecting the flow, optimising the processes and so on. It also good for retro-active debugging, because we can revert the state of an aggregate to the state it was at the moment of the bug occurance
+			   - Deep insight - which is crucial for core subdomain, we can always add another projections that will help to provide additional information about the domain.
+			   - Audit log - domain events display great audit log of event that took place
+			   - Advanced optimistic concurrency management - 
+		   - Event sourcing disadvantages:
+			   - High learning curve: big difference from the traditional way of managing data.
+			   - Evolving the model - evolving the events in the future can be quite challenging. It's definitely much harder than editing a schema
+			   - Architectural complexity - making the design more complicategod
+		   - Performance issues - for most systems problems will arise after 10 000 events per aggregate. But statistically average aggregate contains only 100 events.
+		   - Event store is append only database
+	8. Architectural patterns
+		- Author talks about layered architecture, port and adapters and CQRS
+		- Polyglot modelling - Since all databases are flawed in it's own ways. We always have to balance for scaling, consistency and supporting querying models. Alternative to finding perfect database is polyglot modelling which is implementing different databases for different data-related requirements
+		- CQRS segregates responsibilities of the system's models. There are two types of models: the command(execution. model), and the query(read model)
+		- Model segregation it's not that the i.e command model can't read any data. If that's the case maybe it's time to rethink your architecture. Commands in may cases should return some data, information about new state and so on which can help in further workflow without any need for invoking query for getting the data instead.
+	9. Communication patterns
+		- Here the talk is about comunicating (See chapter 4 - COOPERATION PATTERNS)
+		- Stateless model transformation:
+			- synchronous
+			- asynchronous
+		- Stateful model transformation:
+			- Aggregating incoming data (when bounded context want to aggregate incoming requests and process them in batch for optimisation reasons, or when unifying incoming requests)
+		- When publishing events we can use Outbox pattern
+		- I STOPPED HERE, BECAUSE THE TOPIC SEEMS TO ADVANCED FOR ME. I DON"T HAVE ANY IDEA WHAT THE AUTHOR IS TALKING ABOUT. HOPE TO COMEBACK LATER.
+		- Saga pattern- which is connecting two different aggregates, maybe even from other bounded contexts. and help with managing the span of life of transactions
+		- Process manager pattern 
+	10. Design Heuristics
+	    - Bounded context - how big? Is the bounded context equal to 1 microservice: --> We should not rate the bounded context by its size, rather try to know about domain maximum information to properly decide about the scope of each bounded context because further changes in requirements which span across multuple bounded context (with other teams) are very costly. It is better to start with wider scope and with time try to make bounded context smaller, when we have more information about domain and future needs (mostly applicable to core subdomains).
+	    - Business logic implementation pattern
+	      ![[Pasted image 20240605210518.png]]
+	  
+	    - Architectural Patterns
+	      ![[Pasted image 20240605210913.png]]
+		-  Testing strategy:
+		  ![[Pasted image 20240605211124.png]]
+		- 
 
 
-7. Confitura # 2022 - Jakub Nabrdalik - Things that work for me so well I cannot believe you are not using it [YOUTUBE](https://www.youtube.com/watch?v=5Er7juSAMXI)
+
+
+
+
+
+
+1. Confitura # 2022 - Jakub Nabrdalik - Things that work for me so well I cannot believe you are not using it [YOUTUBE](https://www.youtube.com/watch?v=5Er7juSAMXI)
    - "The feature already is here, it's just not evenly distributed" M.Wilson
    - While faced with instructions from business for implementing some new feature you need to ask question if this feature will be worth implementing, will it be used? or maybe it would be cheaper just do it manually
    - Refine requirements, very important. All written down in paper
@@ -164,12 +261,47 @@ I started exploring this topic because I found an urge to build my microservices
 	   - delete it
 	   - get closer, repeat
 	   - do not be afraid of wasting time.
-- Logs should tell everything. DEBUGGER will help you but only locally.
+   - Logs should tell everything. DEBUGGER will help you but only locally.
+2. The Identifier Type Pattern in DDD [ARTICLE](# Domain-Driven Design: The Identifier Type Pattern)
+	   - Primitive Identifier vs Type identifier
+	   - with Type identifier we can avoid "Primitive obsession code smell" that means avoiding the bug that we can have by mixing the order of the params
+	   - it allows for overloading method. With method like findByOrder(string orderId, string customerId, string type), when we want to make method findByOrder(String orderId) that means that we cannot make another overloading findByOrder(String customerId) because they're of the same types
+	   - it makes logic dependencies physiacal. It means if in Order we have customerId and in Customer we have the same information that if we change it in one place and won't change in the second than with Type identifier compiler will throw errors. The dependency is also physicall not only logical!!
+	   - with type identifgier we can validate our Id
+	   - Conclusion is that it;s good to use type identifier identity in our Entity
+1. When and where to determine the ID of an entity [ARTICLE](https://matthiasnoback.nl/2018/05/when-and-where-to-determine-the-id-of-an-entity/)
+	   -interesting design is to pass to the value object the id we want to declare. Because enity should not be aware of what id should be next in order. so we can implement in repository layer method nextIdentity() and from there take the next value which can be designed different for each storage system
+2. Domain Driven Design - Q&A Sławomir Sobótka [YOUTUBE](https://www.youtube.com/watch?v=do-xqIbKZ_8)
+   - How to tell the boundaries of aggregates
+	   - How can the model be modelled
+		   - "Being": 
+			   - WHAT is the structure
+			   - modelling what can into fall into trap of modelling on to data structures. i.e the order will cost money (float) and will have address (string)
+			   - Modelling the data-base first. (Not optimal approach)"Zwykle w takich firmach gdzie jest święto bazy, rządzi kasta DB nazi"
+		   - "Behaving"
+			   - How something behaves,
+			   - how the model react on signals
+			   - What is changing
+			   - Why is changing
+			   - Under what circumstance it is changing
+			   - Who changes it
+			   - How often it is changed
+			   - What are the consequences of change
+		   - "Becomming"
+			   - What is changed into
+   - How to design the restfull API
+   - What is the most important for modularity
+   - why business doesn't talk to us
+   - How to be a partner and now a worker
+1. 
 
 
 
-1. Domain Driven Design - Q&A Sławomir Sobótka YOUTUBE
-		--TODOoOOOOOOOOO
-1. Problemy wynikające z modularyzacji - Łukasz Szydło
+2. Problemy wynikające z modularyzacji - Łukasz Szydło
 	--TODOoOOOOOOOOO
 1. Architektoniczne antywzorce czyli na co chorują aplikacje - Łukasz Szydło
+
+
+4. https://www.bottega.com.pl/pdf/materialy/ddd/ddd1.pdf
+5. https://matthiasnoback.nl/2017/08/layers-ports-and-adapters-part-2-layers/
+6. https://odrotbohm.de/2020/03/Implementing-DDD-Building-Blocks-in-Java/
