@@ -50,7 +50,8 @@
 	- it has static keyword that lets the class own a method rather than actual object
 8.  What is abstraction
 	- abstraction is the process of separating ideas from specific instances
-9. Interview question: Model up for us "chair entity" --> [[Domain Driven Design#^328415]]
+9. Interview question: Model up for us "chair entity" 
+   --> [[Domain Driven Design#^328415]]
    what chair. It is as with maps, should i model the road map or terrain map etc.
 10. Equals and hashcode contract - 
 	The most popular general use collections are hash collections, HashSet and HashMap. 
@@ -132,11 +133,11 @@
     - in Java every class inherit after Object class 
     - it provides several methods that are universal to all objects, such as equals(), hashCode(), getClass(), toString()
 
+
+
 * jak działa tworzenie stringa 
 * warto wiedzieć jak java zarządza pamięcia i np poczytać o StringPool 
 * string buffer vs string builder 
-
-
 
 * roznice pomiedzy interface a klasa abstrakcyjna
 * exceptiony 

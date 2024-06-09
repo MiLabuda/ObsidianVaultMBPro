@@ -49,10 +49,18 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Software Engineriing/Java Internals.md",
+                "file": "Software Engineriing/Learning Domain Driven Design.md",
                 "mode": "source",
                 "source": false
               }
+            }
+          },
+          {
+            "id": "f96f108631dc8402",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {}
             }
           }
         ],
@@ -122,7 +130,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Software Engineriing/Java Internals.md",
+                "file": "Software Engineriing/Learning Domain Driven Design.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -139,7 +147,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Software Engineriing/Java Internals.md",
+                "file": "Software Engineriing/Learning Domain Driven Design.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -162,7 +170,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Software Engineriing/Java Internals.md"
+                "file": "Software Engineriing/Learning Domain Driven Design.md"
               }
             }
           }
@@ -186,6 +194,8 @@
   "active": "86628c3b0327ef41",
   "lastOpenFiles": [
     "Software Engineriing/Domain Driven Design.md",
+    "Software Engineriing/Learning Domain Driven Design.md",
+    "Software Engineriing/Java Internals.md",
     "Pasted image 20240605211124.png",
     "Pasted image 20240605210913.png",
     "Software Engineriing/Hexagonal Architecture.md",
@@ -199,7 +209,6 @@
     "Software Engineriing/Effective Java.md",
     "README.md",
     "ObsidianVaultMBPro",
-    "Software Engineriing/Java Internals.md",
     "Pasted image 20240530194329.png",
     "Model.md",
     "Model \"chair entity\".md",
