@@ -141,11 +141,17 @@ I started exploring this topic because I found an urge to build my microservices
    - What is the most important for modularity
    - why business doesn't talk to us
    - How to be a partner and now a worker
+11. What are factories in DDD [ARTICLE](https://culttt.com/2014/12/24/factories-domain-driven-design)
+	- Why to use factories at all
+		- standardises the instantiation of an object
+		- provide encapsulation
+		- object should not be responsible for its own creation
+		- it important layer of abstraction
+		- 
 
 
 
-
-2. Problemy wynikające z modularyzacji - Łukasz Szydło
+13. Problemy wynikające z modularyzacji - Łukasz Szydło
 	--TODOoOOOOOOOOO
 1. Architektoniczne antywzorce czyli na co chorują aplikacje - Łukasz Szydło
 

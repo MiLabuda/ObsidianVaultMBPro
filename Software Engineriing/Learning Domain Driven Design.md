@@ -181,4 +181,42 @@
 13. Domain-Driven Design in the Real World
     - Nothing new in this chapter, just bunch of tips, which I don't know how to summarize
 14. Microservices
-    - 
+    - What are the common things between DDD and microservices?
+	- a lor of people use name microservice and bounded-context for the same things, but are they all the same?
+	- Service is a mechanism that enables access to one or more capabilities, where the access is provided using a prescribed interface.
+	- Prescribed interface is any mechanism for etting data in our ot of a service. It can be synchronous or asynchronous.
+	- Services talks with each other by public interfaces, the interfaces are like front doors
+	- Microservice is a service with micro public interface(micro front door)
+	- Reducing service functionality also limits its reasons for change, and make the service more autonomous for development
+	- Microservices also encapsulate their databases, because the possibilities to make a query for SQL could be infinity, but with microservices it should be available to get or modify data only via the public interface
+	- Definition of system is to be a:
+		- set of connected things or devices that operate together
+		- set of computer equipment and programs used together for a particular purpose
+	- General complexity of a system vs local complexity
+	- Shallow modules vs deep modules
+	  ![[Pasted image 20240609115838.png]]
+	- Drawing the boundaries of microservice based on subdomains:
+	  ![[Pasted image 20240609121746.png]]
+15. Event-Driven Architecture
+    - Right now i'm skipping this, I don't have real world scenario for this. It probably won't stick in my mind. Hope to comeback later to this
+16. Data Mesh
+    - two different types of data processing
+	    - (OLTP) - online transactional processing
+	    - (OLAP) - online analytics processing
+		    - Facts tables - these are the tables that gathers the events that has happend in the past. Theyre append only. If we want to remove there is no option we can just append new state with valid status
+		      ![[Pasted image 20240609123858.png]]
+		      ![[Pasted image 20240609123912.png]]
+		    - Dimension tables - represents business process or action
+		      ![[Pasted image 20240609124036.png]]
+	- Data warehouse
+		- data warehouse architecture is this: Extract data from all of the enterprise's operational systems, transform the source data into an analytical model, and load the results data into a data analysis-oriented database, That database is data warehouse
+	- Data lake
+		- this also works as a ingesting operational database and transforming it into analytical database
+	- Data mesh
+		- domain driven design for analytical data
+		- data mesh propose to focus on each bounded context separately and make the analytical model based on them instead of making one big analytical model
+		- in ddd the data mesh gathers data through well defined output ports from the backend of the bounded context
+		- data mesh is treated as a product so it must address the needs of its consumers
+		- this is example of distributed data management
+	- OLAP models should expose more flexible querying options than OLTP models
+	- OLTP data is optimized for real-time operations, whereas it’s acceptable to wait seconds or even minutes for an OLAP query’s response.

@@ -4,67 +4,62 @@
     "type": "split",
     "children": [
       {
-        "id": "20c62ddb1b85fad3",
-        "type": "tabs",
+        "id": "cb0cc99f874f7ae0",
+        "type": "split",
         "children": [
           {
-            "id": "396aaa5e2dfb4ac4",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Software Engineriing/Testing.md",
-                "mode": "source",
-                "source": false
+            "id": "20c62ddb1b85fad3",
+            "type": "tabs",
+            "dimension": 66.63414634146342,
+            "children": [
+              {
+                "id": "396aaa5e2dfb4ac4",
+                "type": "leaf",
+                "state": {
+                  "type": "markdown",
+                  "state": {
+                    "file": "Software Engineriing/Dashboard.md",
+                    "mode": "source",
+                    "source": false
+                  }
+                }
+              },
+              {
+                "id": "94a14dd68d4d1d00",
+                "type": "leaf",
+                "state": {
+                  "type": "markdown",
+                  "state": {
+                    "file": "Software Engineriing/Java Microservices.md",
+                    "mode": "source",
+                    "source": true
+                  }
+                }
               }
-            }
+            ],
+            "currentTab": 1
           },
           {
-            "id": "5bb5b3e479029caa",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Software Engineriing/Domain Driven Design.md",
-                "mode": "source",
-                "source": false
+            "id": "4c03c44bda4d9f3b",
+            "type": "tabs",
+            "dimension": 33.36585365853659,
+            "children": [
+              {
+                "id": "86628c3b0327ef41",
+                "type": "leaf",
+                "state": {
+                  "type": "markdown",
+                  "state": {
+                    "file": "Software Engineriing/Design Patterns.md",
+                    "mode": "source",
+                    "source": false
+                  }
+                }
               }
-            }
-          },
-          {
-            "id": "94a14dd68d4d1d00",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Software Engineriing/Domain Driven Design.md",
-                "mode": "source",
-                "source": true
-              }
-            }
-          },
-          {
-            "id": "86628c3b0327ef41",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Software Engineriing/Learning Domain Driven Design.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "f96f108631dc8402",
-            "type": "leaf",
-            "state": {
-              "type": "graph",
-              "state": {}
-            }
+            ]
           }
         ],
-        "currentTab": 3
+        "direction": "horizontal"
       }
     ],
     "direction": "vertical"
@@ -130,7 +125,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Software Engineriing/Learning Domain Driven Design.md",
+                "file": "Software Engineriing/Java Microservices.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -147,7 +142,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Software Engineriing/Learning Domain Driven Design.md",
+                "file": "Software Engineriing/Java Microservices.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -170,7 +165,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Software Engineriing/Learning Domain Driven Design.md"
+                "file": "Software Engineriing/Java Microservices.md"
               }
             }
           }
@@ -191,32 +186,43 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "86628c3b0327ef41",
+  "active": "94a14dd68d4d1d00",
   "lastOpenFiles": [
-    "Software Engineriing/Domain Driven Design.md",
-    "Software Engineriing/Learning Domain Driven Design.md",
-    "Software Engineriing/Java Internals.md",
-    "Pasted image 20240605211124.png",
-    "Pasted image 20240605210913.png",
-    "Software Engineriing/Hexagonal Architecture.md",
-    "Pasted image 20240605210518.png",
+    "Pasted image 20240715194514.png",
+    "Pasted image 20240715185820.png",
+    "Pasted image 20240715185345.png",
+    "Software Engineriing/Dashboard.md",
     "Software Engineriing/Java Microservices.md",
+    "Software Engineriing/Domain Driven Design.md",
+    "Pasted image 20240711224323.png",
+    "Pasted image 20240711211018.png",
+    "Software Engineriing/Get your hands dirty on clean architecture.md",
+    "Software Engineriing/Design Patterns.md",
+    "Pasted image 20240615101102.png",
+    "Software Engineriing/Testing.md",
+    "Pasted image 20240613200751.png",
+    "Pasted image 20240613200121.png",
+    "Pasted image 20240613200030.png",
+    "Pasted image 20240613195845.png",
+    "wszib/Studies.md",
+    "123.pdf",
+    "Home.md",
+    "Pasted image 20240529205756.png",
+    "Software Engineriing/Hexagonal Architecture.md",
+    "Software Engineriing/Learning Domain Driven Design.md",
+    "templates-examples/Montly Note.md",
+    "Software Engineriing/Java Internals.md",
     "Software Engineriing/Software engineriing.md",
-    "Pasted image 20240604204352.png",
     "Software Engineriing/Docker.md",
     "Software Engineriing/Kubernetes.md",
     "Software Engineriing/Future setup.md",
     "Software Engineriing/Effective Java.md",
     "README.md",
     "ObsidianVaultMBPro",
-    "Pasted image 20240530194329.png",
     "Model.md",
     "Model \"chair entity\".md",
-    "Pasted image 20240529205756.png",
     "Journal/Weekly/2024-Week01.md",
-    "Software Engineriing/Testing.md",
     "Software Engineriing/SQL.md",
-    "Pasted image 20240525163149.png",
     "Software Engineriing/Spring Framework.md",
     "Software Engineriing/Java Persistance API.md",
     "Software Engineriing/Dive into refactoring.md"
