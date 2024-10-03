@@ -6,3 +6,5 @@
 2. Abstract factory
 	- Go to solution when creating an object is non-trivial 
 	- abstract factories are special kind of service which can have dependencies which they can provide to the created object(in example MailTemplateGenerator while creating Mails)
+3. Facade 
+	- 

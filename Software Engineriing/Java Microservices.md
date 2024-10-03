@@ -101,7 +101,7 @@ Good tolls/libraries for
 				- includes automated testing
 				- continuos deployment takes continuos delivery one step further in the pracise of automatically deploying an releasable code into production. High performing organiuzations that practise continuos deployment deploy multiple times per day into production. have fever production outgages, and recover quickly when they occur
 				- move fast without breaking things!
-			- Software architecture
+		2. Software architecture - decoupling methods
 				- its a high level structure which consists of constituent parts and the dependencies between those parts. As you'll see in this section an application architecture is multidimensional so there are multiple ways to describe it. It is important because it determines the application quality, scalability, security, reliability. At the top is fast and safe delivery of software
 				- The 4+1 model of software architecture [ARTICLE](https://www.cs.ubc.ca/~gregor/teaching/papers/4+1view-architecture.pdf)
 					- Logical view the software elements that are created by develiopers. In object oriented languages these elements are classes and packages(inheritance, associations, depends-on)
@@ -111,4 +111,501 @@ Good tolls/libraries for
 					- ![[Pasted image 20240715194514.png]]
 					- Why it matters
 						- because its responsible for the quality of service -ities (scalabilities, securities, reliabilities and so on)
-						- 
+			- Loose coupling 
+				- all interactions with services are done via its API, the databases are hidden for each individual microservice
+			- Shared libraries - it is tempting with microservices but it must be ensured ti don't accidentally introduce coupling between services. We should be interested only to implement things that are not likely to change within whole application. I.e Money class should change
+			- Decomposing by business capability pattern
+				- an organizations business capabilities captures the "what" organization is doing. I.e in bank you can deposit money, but "how" the money is deposited it can vary over time
+			- Decomposing by sub-domain pattern
+				- Subdomains, bounded context and ubiquoituos language
+				- The main difference between one model for enterprise modeling and subdomains from ddd is that in one enterprise model we have the same namings for entities in our system. Whereas in subdomains we can have separate naming for each bounded context. Which make easier talking with business
+				- the concepts of subdomains is also great way to eliminate god classes which makes easier the decomposition. 
+			- Decomposing guidelines 
+				- Single Responsibility principle - a class should have only one reason to change.
+				- Common Closure Principle - the classes in a package should be closed together against the same kinds of changes. A change that affects a package affects all the classes in that package
+				- The principles of Object Oriented Design [ARTICLE](http://butunclebob.com/ArticleS.UncleBob)
+			- Decomposition obstacles
+				- network latency
+					- when you decompose the system you may found that it need to do a lot of rounds across microservices
+				- reduced availability due to synchronous communication
+					- using rest protocols reduce the availability because when we don't have any of the service we rely on then our microserice also won't work. So messaging system sometimes might be the better approach
+				- maintaining data consistency across services
+					- some system operations must update data in different services. transactions management is much more difficult then simple ACID transaction on db. We should use SAGA pattern, but it is more complex. One drawback of sagas that they are eventually consistent. If you need to update some data atomically then it must reside within a single service, which might be an obstacle for decompposition.
+				- obtaining a consistent view of the data
+					- its harden than with one service and one db.
+				- god classes preventing decomposition
+					- are the classes that are bloated and are used in many places. implements business logic for many different aspects of the application
+					- The main value from ddd is that we have many domain models and many subdomains, so we dont need to have one god mode OrderService class. instead we can have delivery (that consist only some parts of original order) we will have kitchen service which also will have only small portion of original order and so on.
+		3. Interprocess communication in a microservice architecture
+			- Interaction styles:
+				- by relation type
+				- one to one - each requests is processed by only one service
+				- one to many - each requests is processed by multiple services
+				- By synchronousity
+				- synchronous - client expects a timely response from the service and it might even block it while it waits
+				- asynchronous - the client doesn't block the service and the response if any is neccessary immediately
+				- By interactions
+				- requests/responses
+				- asynchronous requests/responses
+				- one way notifications
+				- by different types of one to many relationships
+					- publish/subscribe
+					- publish/async response
+			- When building microservices app we no longer face the compilation errors we rather get runtime errors while one of the service doesn't respond to our calls\
+			- Api first design states that its best to quickly notice the reasons why we even need the microservice and do it by designing api
+				- in microservices changing api is a lot more complicated then tha in monollith
+				- Use semanting versioning MAJOR.MINOR.PATCH
+				- Making minor, backward compatibile changes. Ideally we should do only these changes. Adding optional attributes to requests, adding attributes to response, adding new operations
+			- Message formats
+				- Text based formats
+					- json
+					- xml - they are human readable, self describing. These are collection of named values, this formats enable thec ocnsumer to extract only important values and ingore the rest
+				- binary message formats
+					- protocol buffers
+					- avro
+			- communication protocols
+				- rest - is an IPC (Inter-process communication) mechanism that uses http
+					-  a key concept in rest is resource or collection of business objects
+					- in example get returns the resource which is in form of xml or json objcts
+					- REST vs RESTfull - not all of te rest api are restfull
+						- [ARTICLE](https://martinfowler.com/articles/richardsonMaturityModel.html)
+						- the api is restfull only when hateoas is applied and when in get calls we get the links to further modifications of that resource
+					- easy to test viai.e Postman or browser
+					- directly supports requests/response communication
+					- firewall friendly
+					- doesn't require intermediate broker
+					- it ONLY supports the requests/response style of communication
+					- recuduced availability. both client and the service must be runnign for succesfull exchange
+					- client must know the locations (URLs) of the service instances
+					- fetching multiple resources in a single request is challenging\
+					- it sometimes difficult to map multiple update operations to https verbs
+				- GraphQL - introduced for effective data fetching
+				- gRPC
+					- gRPC is a framework (of Remote procedure call) is a binary message based protocol. As mentioned earlier. Its done using Protocol Buffers
+					- gRPC api consists of one or more services and requests response message definitions. and its strongly typed
+					- its also synchronous communication mechanism so it also suffers from the problem of partial failure
+			- Handling partial failure with circuit breaker patterns
+				- in synchronous communication between microservices theere is risk of partial failure
+				- the circuit breaker can immediately reject invocations after some timeout period after the given number of invocations is exceeded
+				- we need to have implemented a proxy to handle unresponsive services
+				- we need to decide how to recover from a failed remote service
+				- [Making the Netflix API more resilient](https://netflixtechblog.com/making-the-netflix-api-more-resilient-a8ec62159c2d)
+				- [Fault tolerance in high volume](https://netflixtechblog.com/fault-tolerance-in-a-high-volume-distributed-system-91ab4faae74a)
+			- developing robust api
+				- network timeouts - never block indefinitely and always use timeouts when waiting for response
+				- limiting the number of outstanding requests from a client to a service - give a max number of requests that a client can make to a service. If limit has been reached there is no sense to trying more and these requests should fail automatically
+				- circuit brekaer pattern - track the number of succesfull and failed requests and if the error rate exceeds some treshold, set the circuit brekaer to fail further attempts automatically. Aftrer a timeout period the client should try again and if succesfull then close the circuit breaker
+				- Hystrix is a netflix open source library that implements circuit breaker and other patterns so it very much recommended to use that in our microservies
+				- for each case you need to decide whether return an error while servicew is unavailable or some cached data or some default value? sometimes the call might be invoking many other services which not all of them are super important. If the important one died we can return error and when less important died we can return cachced values
+				- Service discovery -basically it a service registry with database that of the network locations of an application's service instances. The mechanism updates the service registry when service instances start and stop. When a client invokes a service the servie discovery mechanism queries the servie registry to obtain a list of available service instances and rooutes the request to one of them
+		- Two main ways to implement service registry
+			- The services and their clients interact directly with service registry - 
+				- self registration pattern. A service instance invokes the service registry registration api to register its network location. It may also supply a health check URL
+				- Netflix Eureka is very good service registry library to use - Spring cloud based services automatically use Eureka
+				- Alternative is to use discovery mechanism provided by the deployment infrastructure
+			- the deployment infrastructure handles service discovery
+				- kubernetess and docker has build in service registries
+				- the deployment platform gives each service a dns name a virtual IP address and a DNS name that resolves to the VIP address (Virtual IP). A service client makeas a requests to the DNS  name and the deployment platform routes the requests to one of the availanle service instances. The deployment platform is doing all the work as service registration, service discovery, requests routing
+				- 3rd party registration pattern and server side discovery pattern
+		- Communication using the asynchronous messaging pattern
+			- broker based
+			- broker-less
+			- Messaging - messages are exchanged over message channels(topics). A sender writes a message to a channel (topic) and a receiver reads messages from a channel.
+			- message consist header and body, header has key-value pairs of parameters (metadata), also unique message ID, and optional return address. The message body is te data being sent in either text or binary format
+			- Types of messages:
+				- document - contains only data. receiver decides how to interpret it.
+				- command - equivalent of rpc requests. specifies the operation to invoke and its parameters
+				- event - a message indicating that something notable has occurred. Its often a domain event, which represents a state change of a domain object such as an Order
+			- Message channels
+				- types of channels
+					- point to point - delivers the message to exactly one consumer that is reading from the channel. i.e command message is often sent over a point ro point channel
+					- publish/subscribe - delivers each message to all of the attached consumers. Services use publish-subsribe channels for the one to many interactions. i.e event is send via this channel
+				- Messaging doesnt have one main api specification tool like rest has open api
+				- Message brokers - 
+					- brokerless - i.e ZeroMQ the messages are exvhanged directly from service to sevice
+						- allow lighter network traffic and better latency
+						- eliminate the possibility of a broker being a bottleneck
+						- has lexx complexity
+						- minus: services needs to know about each other locations
+						- minus: reduced availability
+						- minus: implementing i.e guaranteed delivery is more challenging
+					- broker-based - i.e kafka or rabbitMQ
+						- services doesnt need to know about each other locations
+						- brokers buffers the messages until the consumer is able to consume them
+						- plus: loose coupling
+						- plus: message buffering
+						- plus: flexible ommunication
+						- plus: explicit inteprocess communication
+						- minus: potencial performance bottleneck
+						- minus: potential single point of failure
+						- minus: additional operational complexity
+						- challenges: 
+							- competing receivers: order creation, order update, order cancel. 
+								- Kafka use sharded channgels
+								- sharded channel consists of two or more shards, each one behaves like a channel
+								- the sender specifies the shard key in messages header. The message broker uses a shard key to assing the message to a particular shard
+								- broker groups together multiple instances of a receiver and treats them as the same receiver. Kafka uses for this consumer_group
+							- duplicate messages
+								- write idempotent message handlers
+								- track messages and discard duplicates
+									- use database table with message ids to track them and discard if there are duplicates
+							- transactional messaging - very often we expect our system to do some actions within one transaction
+								- using database as a message queue. i.e when creting new order we persist the info to order table but we also persist the  message we want to send to OUTBOX db table. then the message relay sends the message from OUTBOX table
+									- sending the messages from outbox to message broker is a challenge
+									- we can do it by using polling publisher pattern. We can do it when using relational db. just periodically querries the table select* from OUTBOX ordered by ..... ASC next the MessageRelay publishes those mesages to the message broker sending one to its destination message channel at the end it can delete those messages from the OUTBOX table - works well at LOW scale, but frequently calling the db can be expensive, 
+									- publishing events by applying the transaction log tailing pattern - 
+										- ![[Pasted image 20240724205011.png]]
+			- Eliminating synchronous interaction 
+				- replicating data - keeping the data in the service that handles the call without need to hitting the other services like i.e while creating new order we can keeping replicated data about restaurant menus and so on
+					- minus: doesnt really work well with big parts of data. i.e we can't really replicate the data of i.e consumers because they number is too big
+					- we can do the replication by subscribing to their event, so whenever something changes we got the information
+					- minus: we still don't solve the problem of updating data owned by other services
+				- finish processing after returning a response
+					- this way we validate the requests using only the data available locally then update the db and isert messages into OUTBOX table then return a response to client. which ensures that services are loosely coupled
+					- minus: client is more complex, we return minimum information. If the customer want to know if the request was succesfull. the service needs to pool data or our backend must send notification
+					- nevertheless its preferred approach in many aituations
+		4. Managing transactions with sagas -->  Using the saga pattern to keep data consistency
+			- saga is a sequence of local transactions. each local transaction updates the data within single service using ACID transaction 
+			- services initiates the first step. completion of a local transaction triggers the execution of the next local transactuion
+			- saga is ACD transactions 
+			- ![[Pasted image 20240724232123.png]]
+			- sagas uses compensating transaction to rollback changes - comparing to traditional ACID transacgtions. sagas transactions can execute rollbacks on database, because each step commits the changes to the local database
+			- Ways of structuring saga
+				- Choreography - distributing the decision making and sequencing among the participants.
+				- orchestration - centralize a saga coordination logic in saga orchestrator class. Saga orchestrator sends command messages to saga participansts telling which operation to perform
+			- choreography based saga. Participants subsribe to each other events and respond accordingly
+				- plus: simplicity
+				- plus: loose coupling
+				- minus: more difficult to understand - we have the logic in all of the services instead in one class to lookup
+				- minus: cycling dependencies between services - they subsribe to each others events which create cyclic dependencies which is a code smell
+				- minus: risk of tight coupling - each saga participant need to subsribe to all events that afect them
+				- summary: for simple sagas we can use choreography but for more complex better to use orchestration.
+			- orchestrated based saga - the logic what saga needs to do is placed in one class only
+				- a good way to create saga orchestrator is to treat is as STATe MACHINE. it consists a set of states and a set of transitions between states that are triggered by events.
+				- plus: simpler dependencies
+				- plus: less coupling 
+				- plus: improves separation of concerns and simplifies business logic. This is big because let's say Order will have only APPROVAL_PENDING state and then it will have APPROVED or REJECTED any intermediate state. the business will be much simpler because of that
+				- minus: risk of centralizing too much business logic inside it. Solution is to design orchestrators that only ORCHESTRATE and doesnt do any other business logic
+				- Its best fit for most of the sagas
+			- Sagas are ACD (Atomicity, consistency, durability ---> lacks issolation)
+			- Lack of isolation can cause anomalies. Anomalies like:
+				- lost updates --is when we send create order, the system is processing it, then client calls to cancel the order and then system processing finishes and saves the result as created
+				- dirty reads - 
+				- fuzzy/nonrepeatable reads
+			- Contermeasures for handling lack of isolations
+				- semantic lock
+				- communicative updates
+				- pesimistic view
+				- reread value
+				- version file
+				- by value
+				- STRUCTURE OF SAGA
+					- compensatable transactions - theyre transactions that can be and should be compensated. they might need some additional action to retrieve the initial state of transaction or to set the action to rejected
+					- pivot transactions - is a middle point in the saga, from where it succed, it just goes straight to the end. when it succed it cannot be compensated. It's a middle ground. It;s something like last compensatable transaction or first retriable transaction
+					- retraible transactions - these don't have the rollback possibility, they are guaranteed to complete
+				- semantic lock - it sets a flag in any record that it creates or updates. that indicates if the record isn't commited and therefore could potentially change. the flag can precent from accessing the record or give the info that the record should be treated suspiciously. Example of semantic lock i _PENDING_ state which tells us that its being work on. 
+					- It might be example when in process of approving order client sends cancel event, then we need to decide what to do. We can fail it and tell the client to try again later. It's easy but its making client more complex because of retry mechanism. Other option is to block the cancel call until the lock is released, its better solution
+				- commutative updates - action is commutative when it can be executed in any order, it doesnt matter if its first or last.
+				- pesimistic view - it reorders the step of saga to minimize business risk. We just need to ensure that the most important things happen last and the state changing actions happen first
+				- reread values - we need to reread the value before updating it. if the value is unchaged we can update the record, and if its changed then we abort the action
+				- version file - 
+			- Here is the place (130-140p) where we can learn more about implementing sagas using EventuateTram
+			- Summary best solution for keeping transaction in microservice system is to implement saga(choreography or orchestration model) we can implement it ourself or we can use some saga framework.
+		5. Design business logic in a microservice architecture
+			- Aggregate pattern - this is a cluster of objects that create one unit
+				- aggregates avoid any possibility for spanning service boundaries. inter-aggregate communication is via primary key value isntead of object reference
+				- transacrtion can only create or update single aggregate. that means they fit the constaints of microservices transactions model
+			- Transaction script pattern
+			- Domain model pattern - in domain model many classes consist of both state and behaviour, some may be only state and some may be only behaviour. in this case services class are mostly simple because most of they do is to delegate
+			- Domain model, classes create closely mirrored classes to the real world which makes their role in the design easy to understand
+			- Building blocks of DDD:
+				- Entity: Object that has persistent identity in Java we would call it with annotation @Entity for JPA
+				- Value objects - collection of values, just wrapper for basic value, two of value objects which has the same value can be used interchangbly
+				- Factory - implements object creation logic that's too complex to be done in constructor. Factory MIGHT be implemented static
+				- Repository - provides access to persistent entities
+				- Service - implements business logic that doesn't belong in entity or value object
+			- Aggregate - it has explicit boundaries. It decomposes domain model into chunks which are individually easier to understand. They also clarify the scope of operations such as load update and delete. The operations work now on all aggregate i.e (Order, orderFeatures, orderLineItem and so on, instead on only orderLineItem i.e)
+				- It solves the consistency issues generated bu fuzzy boundaries
+				- Concurreny is done by locking whole aggregate instead one entity
+				- Identifying aggregate is a key
+			- Aggregate rules:
+				- reference only the aggregate root. When accessing the aggregate from outside we can communicate only with aggregate root. Updating orderItems can be done only by calling Order to update its orderItems (because of that the aggregate can keep control of its internal rules<i.e minimum orderCost>)
+				- Inter-aggregate references must use primary keys - aggregates may reference each other only by the identity(primary keys) Order can reference COnsumer by consumerId. Order references restaurant by restaurantId 
+					-> aggregates are loosely coupled because of that 
+					-> aggregater boundaries are well definied, we avoid risk of updating more aggregates than we want
+					-> its easier to store data in NoSQL
+					-> scaling database by sharding aggregates is pretty straighforward
+				- One transaction creates or updates one aggregate - its harder to implement transaction that span many aggregates but this problem are resolved by saga. Saga delegates to different services and keeps control of their individual transactions
+			- Aggregate granurality - Its crucial in DDD in microservices to make aggregates as granular as posible. the bigger aggregate the worse
+			- If request need only one aggregate to be updated then we can execute it within one transaction, when it needs to update more aggregates then we need to create saga and delegate 
+			- Domain event in DDD is something that happend to the aggregate. represented by a class, represents a state change. (i.e Order Created, Order cancelled, Order shipped)
+			- Why publish events
+				- maintaining data consistency with choreography based saga
+				- notyfing a service that maintains a replicta that the source data has changes. (CQRS - command query responsibility segregation)
+				- notyfing different application via a registered webghook or via message broker in order to trigger next step in businnes process
+				- notyfing a different component of the same application in order to send a websocket message to a user browser or update a text database such as elastic search
+				- sending notifications
+				- monitoring domain event to veryfi that the application works correctly
+				- analyzing event to model user behaviour or our business rules
+			- Domain event is verb wrote in a past like OrderCreated, it consist also of metadata, event id, timestamp, user who made the change
+			- event enrichment - its just not plain information about orderId thats being created but rather whole object of order details and so on. Because of that the services that further processes the event doent need to fetch all the data. But the drawback is it's less stable because with every change of order details we need to change the event structure
+			- Domain events are published by aggregates. aggregate knows when its state changes so it can send event, but it's not the best solution per se. aggregates an have the dependency injection BUT services can, so we can implement in services method where we invoke aggregate method and then we publish the ebvent. -> For that we just need to change the result type of accept method in aggregate to list<event> and return events which can be the event
+			- Domain event are published to a message broker such as apache kafka
+		6. Developing business logic with event sourcing
+			- Event sourcing persist aggregate as a sequence of events in database know as event store. each event represent a state change of the aggregate. application recreates the current state of an aggregate bby replaying the events
+			- vey big plus is that it presents us with history of aggregates. Incredibly valuable for auditing and modeling our future plans 
+			- minus: it's quite hard to do right, and requires harder querrying (you must use cqrs)
+			- The trouble with traditional persisting
+				- object-relational impedance mismatch
+				- lack of aggregate history
+				- implemending audit logging is tedious and error prone
+				- event publishing is bolted on to the business logic
+			- We can retrieve the state of an domain entity saved in events by:
+				- loading all the events for the aggregate
+				- crete an aggregate instance by using its default constructor
+				- iterate through the events aclling apply()
+			- Handling concurrent requests using optimistic locking - optimistic locking typically uses version column to detect whether an aggregate has changed since it was read
+			- Using snapshots to improve performance - when agregate has a lot of events (i.e over 10000 or over 1000) we can persist a snapshot of older values and then reconstruct the value from the snapshot and not from the default constructor
+			- The information about how to implement an event store : (202-209)
+			- the information about how to implement a saga for event sourcing (209-219 )
+		7. Implementing querries in a microservice architecture
+			- Api composition pattern - 
+				- Api composer - this implements the query operation by querying the provider services and combines the result
+				- provider service- the service that owns some of the data that query returns
+			- Api composer might be a client (web application) it can also be api gateway or backend fo frontend
+			- Who plays the role of composer? - 
+				- client of the service (frontend or mobile app) - not good solutions for clients outside of firewall because the connection will be slower
+				- api gateways which takes control of composer for query operations
+				- api composer as standaolne service - for most complex querries
+			- Api composer should use reactive programming model (we should send requests to providers all at once, and best be sure that the provider is not waiting to resolve our requests because of some other request)
+			- Api composition drawbacks:
+				- increased overhead - multiple requests just to get reponse for simple findOrder call, increasing the cost of runnign application
+				- risk of reduced availability - when involving more services the more risk we have for some of it not working. there are some ways to fight with it
+				- lack of transactional data consistency
+			- CQRS pattern - its about separating of concerns. We have two databases. One for create updates and deletes and other for only retrieving data. Synchronized by subscribing to events send by command requests. 
+			- Command handles the CRUD operations and its mapped to its own database. Command side publishes event whenever its data changes
+			- Querry handles the non-trivial querries to db. I.e order history service is a querry only service which didn't belong to any other service that's why it was made as an separate service. it subsribes to order services and other for events and shares the api for findOrderHistory (with customerId and filters and sort)
+			- Benefits of CQRS 
+				- enables the efficient impementation of querries in a microservice architecture
+				- enables the efficient implementation of diverse queries
+				- makes querying possible in an event sourcing based application
+				- improves separation of concerns
+			- Drawbacks of CQRS
+				- more complex architecture
+				- dealing with the replication lag
+			- Api composition vs CQRS - use api composition whenever possible and CQRS only when you must. CQRS is best when the querry is very complicated or it wouldm be super ineefficient to run api composition
+			- CQRS - SQL vs NoSQL - sometimes nosql might be better choice because of flexible data model and better performance and scalability. SQL is better because it has great performance, and teams are more familiar with it 
+			  ![[Pasted image 20240728155812.png]]
+		8. External API patterns
+			- Api gateway its an application fron door
+			- in microservices we rarely use calling by the clients microservices's api directly, it is because, 
+				- client need to send many requests to get what he needs, 
+				- also because encapsulation is missing, client knows about microservices so its hard to extend or change or refactor, so rarely we use client application as an api composer
+			- Api gateway i a service that serves as the single entry point for API requests from the outside. It works like a Design Pattern Facade. It provides encapsulation for internal architecture, it can also handle authentication, monitoring and rate limiting(?)
+			- Api gateway responsibilities
+				- Requests rooting - identical like web servers such as nginx
+				- Api composition
+				- Protocol translation
+				-Edge functions like:
+					- Authentication
+					- Authorization
+					- Rate limiting
+					- Caching
+					- Metrics collection
+					- Request logging
+				- all of this can be implemented in backend services or in api gateway or in separate dedicated service (edge service)
+				- This can be actually good idea to implement dedicated service instead of using only api gateway because then we can have api gateway that is doing only it main job which is routing and composition. Application can have multiple api gateways, so we can centralize our most importand edge funcitons like authentication in a dedicated service. The third option is to implement one big api gateway but in layered architecture with many api gateways for mobile/browser/public and one common layer for the same code(like authorization)
+			- Api gateways ownership 
+				- it can be separate team owning api gateway but its a bottleneck and team working on api need to send requests for team of api gateway.
+				- it can be that each api gateway belongs to the dedicated team which is working on this api
+				  ![[Pasted image 20240728200600.png]]
+				- Backends for frontends - its something that each api team is an owner of its part of an API gateway. This clearly defines responsibilities, api modules are isolated from each other, it benefits the observability, because now each api is its own process
+			- Design issues
+				- performance and scalability
+				- writing maintainable code by using reactive programming abstractions - if we won't use reactive programming then we are running into problem that when composing api calls we will have sum of all the api calls i.e 5 requests to 5 services will result in request*5 of whole time
+				- handling partial failure - api gateway must be reliable that means running at least couple instance behind the load balancers
+				- being a good citizen in the application's architecture - 
+			 - How to implement api gateway 
+				 - using off the shelf api gateway product/service
+					 - AWS api gateway
+					 - AWS Aplication load nbalancer
+					 - Kong/Traefik
+				 - developing your own api gateway using framework or just from scratch
+					 - Netflix implemented zuul
+					 - Spring cloud gateway (implementing 275p) - great, great option for implementing api gateway
+					 - graphQL (implementing api gateway using graphql and apollo graphql - 281-290)
+		9. Testing microservices part 1 (292 - 317) ---> TODOO
+		10. Testing microservices part 2 (318 - 349) ---> TODOO
+		11. Developing production-ready services
+			- Security, configurability, observability
+			- Implementing security is mostly the same as for monolith but it's to be handled - how to pass identity of user from one service to another
+			- When implementing security we are responsible for main things like:
+				- Authorization
+				- Authentication
+				- Auditing
+				- Secure interprocess communication
+			- Monolith security characteristics
+				- in memory security context - thread local which keeps user identity. Services cant share memory so they cant share security context as well
+				- centralized session - it's also not gonna work for microservies
+			- Handling authentication in api gateway - by doing this we avoid the problem of each service implement security by itself. In long run each service could implement differently and allow the bugs to slip in. Api gateway take all the responsibility and handle different services api by itself and encapsulate all of the nuances
+			- Handling authorization - centralization of authorization logic within api gateway reduces the risk of security vulnerabilities
+				- api gateway can handle only authorization for specific urls, its much worse for restricting access like access control listss because it requires much knowledge about the domain of the service\
+			- Using the token to pass the identity
+				- There are two types of token
+					- opaque tokens which are basically UUID, the service that is a recipient of that token must make another call to check whether this token is valid
+					- transparent tokens which contains the informaciton about the user. (JWT). JWT contains payload with information about user about his roles, about expiration date and other metadata. Because JWT contains all of the information, there is no way to revoke such token. Which is problematic when malicious third party actor take control over the token. the solution is to create short lived tokens, to restrict what other party could do with such tokens, but because of that client must continuosly reclaim tokens. that is solved quite nicely by oAuth 2.0
+			- Using oAuth2.0 in microservices
+				- Authorization server - provides an API for authenticating users and obtaining access token and a refresh token
+				- Access token - token that grants access to a resource server. (the implementation is individual but i.e Spring oAuth use JWT)
+				- Refresh token - a long lived, recoverable token that a client uses to obtain a new access token
+				- resource server - a service that uses an access token ti authorize access. In microservice archtiecture, the services are resource servers
+				- client.- a client that wants to access a resource server. In microservices API gateway is the oAuth 2.0 client
+				- Main objectives of security in microservices:
+					- te api gateway is responsible for authenticating clients
+					- the api gatewat and the services use a transparent token, such as a JWT, to pass around information about the principal
+					- a service uses the token to obtain the principal identity and roles
+			- Designing configurable microservices
+				- Externalized configuration - supply configuration property values such as database credentials and network location to a service at runtime
+					- push model - the deployment infrastructure passes the configuration properties to the service instance using operating system envoronment variables or configuration file (we can supply configuration file and it will read it at start of application)
+					  - Spring boot external configuration - Spring boot reads configuration from a variety of sources 
+						  - comman line arguments
+						  - SPRING_APPLICATION_JSON an operating system environment variable or JVM system property that contains json
+						  - JVM system properties
+						  - operating system environmet variables
+						  - a configuration file in the current directory
+						  - One main challenge of push method is reconfiguration while the application is running. Its not possible
+					- pull model - service instance read is configuration properties from a configuration server
+						- using a configuration server has a lot of benefits
+							- centralized configuration - all the configuration properties are stored in one place, which makes it easier to manage
+							- transparent decryption of sensitive data
+							- dynamic reconfiguration
+						- Spring cloud config (ready to use framework)
+			- Designing observable services
+				- health check api - expose an endpoint that returns the health of the service 
+					- implementing a health check endpoint in a way that can gives us information about the state of a service. i.e we can verify if the service its connected to an rdbms by obtaining a database connection and executin a test query, more sophisticated way of doing this is to simulate the requests sent by client
+					- Spring boot actuator is a good library for this, it checks what tools your service is using and its creating such tests for a helth check, also let you configurre your own healthcheck
+					- invoking health check
+				- log aggregation - log service activity and write ogs into a centralized logging serves which provides searching and alerting
+					- how a service generates log (using one ogf the logging libraries like Logback, we can use it straightforward or we can wrap it around with our custom logic if we need more functionality)
+					- log aggregation infrastructure
+						- ELK (Elasticsearch, Logstash, Kibana
+						- Fluentd, Apache Flume
+						- AWS CLoudWatch Logs
+				- distributed tracing - assign each external request a unique id and trace requests as they flow between services
+					- it can be done with ready to use library which assign to requests particular name of a serviced, traceId and the spanId, and the flag if it was already exported to distributed tracing system
+					- using instrumentation library - it send the spans to a distributed tracing server, which then stitches the spans togerther to form complete traces and stores them in a database
+				- exception tracking - report exceptions to an exception tracking service which de-duplicates exceptions, alerts developers and track the resolution of each exception
+					- service should rarely log an exception, but when it does it crucial that we identify the root cause
+					- Honeybadger (cloud based)
+					- sentry (open source)
+				- application metric - services maintain metrics such as counters and gauges and expose them to a metrics server
+					- Spring boot takes care of basic metrics with Micrometer Metrics API (its actually very interesting), we can user MeterRegistry which then in a methods we can use calls like meter registry.counter("approved_orders").increment();
+					- delivering metrics to the metrics service
+						- push - service instance sends the metrics to the metrics service by invoking an API, 
+						- pull - metrics service invokes service api to retrieve the metrics from the service instance. Prometheus use the pull model
+						- When we have ready metrics delivered we can display them using grafana
+				- To implement all of this in each service instead writing it from scratch it would be best to use chasis pattern, in java such chasiss pattern is Spring Boot and spring cloud, springboot proivdes externalized configurationn, sprin cloud provides functions such as circuit breakers
+		12. Deploying microservices architecture
+			- Deploying application must implement:
+				- service management interface - enables developers to create, update and configure services. Ideally this interface is a REST API invoked by comman line and GUI deployment tools
+				- runtime service management - attempts to ensure that desired number of service instances is running at all times. If a service instance crashes or is unable to handle requests the production environment must restart it. If a machine crashes than the production must restart those servie instances on a different machine
+				- monitoring - provides developers with insiht into what their services are doing, including log files and metrics. If there are problems, the production environment must alert the developers.
+				- request routing, routes requests from users to the services
+			- Deploying options:
+				- deploying services as a language specific packages such as Java JAR or WAR files (Pattern: language-specific packaging format)
+					- You need to install JDK, also install Apache tomcat, once you configured machine, you copy the package to the machine, and start the service. Each instance runs as a jvm process
+					- benefits:
+						- fast deployment (you copy the service to a host and start it)
+						- efficient resource utilization, especially when running multiple instances on the same machine or within the same process
+					- drawbacks:
+						- lack of encapsulation of the technology stack(each service needs a particular versions of runtime like apache tomcat or JDK (i.e 8,11,17) services might be written in many languages  so consequentially development team need to pass a lot of information for opertion team.) This coplexity enlarges the risk of errors during deployment
+						- no ability to constraint the resources consumed by a service instance - a service can potentially consume all of the VM resources like CPU or memory starving other services
+						- lack of isolation when running multiple service instances on the same machine - it means one incorrect service can impact other service instances. as a result we got unreliable application
+						- automatically determining where to place service instances is challenging - we don't have much control over placing our services in most efficient ways of utilizing the resources
+				- deploying services as virtual machines which simplifies deployment by packaging a service as a virtual machine image that encapsulate the service technology stack (Pattern: Deploy service as a VM)
+					- instead of coping JAR/VAR onto the vm we copy onto cloud service like AWS, then it takes it an create images from it with all needed software
+					- vm image builder configures the vm image machine to run the app when the VM boots, using linux init system
+					- tools for it:
+						- Animator (Netflix)
+						- Packer (packer.io)
+						- AWS EC2,
+						- VMware
+					- benefits
+						- the vm image encapsulates the technology stack - vm image contains all of its dependencies. it eliminates risk of errors regarding installing and updating software
+						- isolated service instances - services run in complete isolation. each vm has a fixed amount of cpu and memory and cant steal resources from other services
+						- uses mature cloud infrastructure
+					- drawbacks
+						- less-efficient resource utilization - each service has more overhead of operating system and so on. (not big of problem for java services because they are heavyweight, but bigger problem for nodejs and golang)
+						- relatively slow deployments
+						- system administration overhead
+				- deploying services as containers, which are more lightweight than virtual machines (Pattern: Deploy a service as a container)
+					- ![[Pasted image 20240731183118.png]]
+					- when you create a container you can specify the cpu, memory and the container runtime like docker will control the containers to not using more resources then declared 
+					- deploying service using docker
+						- Building a docker image
+							- creating Dockerfile, dockerfile describes how to build a docker container image. it specifies the base container image, 
+							- Dockerfile:
+							  ![[Pasted image 20240731183621.png]]
+							- Command line script to build container image
+							  ![[Pasted image 20240731183813.png]]
+						- Pushing a docker image to registry
+							- You must use two commands to push an image to a registry
+							  ![[Pasted image 20240731185227.png]]
+							- next you use docker push command to upload tagged image to the registry
+							  ![[Pasted image 20240731185245.png]]
+						- Running a docker container
+							- run docker with externalized configuration as the database network location and more
+							  ![[Pasted image 20240731185621.png]]
+							  That's not the most optimal way to start docker containers, better is docker-compose
+							- Docker-compose is a tool that let you declaratively define a set of containers with yaml configuration --> Docker in action (Manning, 2016). BUT the problem with docker-compose is that its limited to a single machine, to deploy services reliably you must use docker orchestration framework such as kubernetes, whicch turns a set of machines into a pool of resources.
+					- Benefits:
+						- encapsulation of technology stack in which the api for managing your services becomes the container api
+						- services instances are isolated
+						- service instancess resources are constained
+						- its lightweight and relatively fast, building images is fast, sending to registry is fast, booting container is fast
+					- Drawbacks:
+						- YOU ARE RESPONSIBLE FOR ADMINISTRATION OF CONTAINER IMAGES which is quite a lot
+					- Deploying application with Kubernetes
+						- simply docker orchestration framework which is a separate layer of software on top of docker that turns a set of machines into a single pool of resources for running services. You can tell kubernetes to run N instances of your service andit handles the rest
+					- Overview of kubernetes
+						- resource management - treats a cluster of machines as a pool of cpu memory and storage columes, turning the collection of machines into a single machine
+						- scheduling - select the machine to run your container and each node's available resources
+						- service management - implements the concept of named and versioned services that map directly to services in the microservice architecture. kubernetes ensures that the desired number of healthy instances is running at all times.
+					- Kubernetes architecture
+						- each machine in kubernetes cluster is either master or node. in typical clusters there is one master and nodes. master is responsible for managing the cluster, nodes are workers that runds one or more pods. A pod is a unit of deployment that can run one or more containers.
+						- Master runs the several components like
+							- API server - REST API for deploying and managing services used by the kubectl, command line interface
+							- Etcd - key-value NoSQL database that stores the cluster data
+						- Description of deploying services with kubernetes (401-416)
+				- deploying service using serverless deployment which is even more modern than containers.(Pattern: Serverless deployment)
+					- descriptions of aws lambda functions(420-427)
+		13. Refactoring to microservices
+			- strangler application - new application that consists of microservices that you develop alongisde and end the microservices that you extract from the monolith
+			- When refactoring monolith application into microservices you can have two obstacles: 
+				- splitting the domain model - you need to eliminate the object references. You can use referencing by primary keys instead
+				- refactoring the database - when splitting the model into two microservices it might be that you need to split persisten classes as well.
+					- replicate data to avoid widespread changes - when extracting part of the class and part of the database, needed change in the code might be too much. That's why we can leave the database tables in monolith and replicate data into them.
+				- Ranking of the modules that require extraction from monolith
+					- ranked by
+					- accelerates development
+					- solves a performance, scaling or reliability problem
+					- enables the extraction of some other services
+				- Pick an interaction style and ipc mechanism
+					- one of the service can implement adapter like CustomerContactInfoRepository and underneath communicate via rest api with other service/monolith
+					   it can be inefficient, and it can be not so reliable, because synchronous communication is much more keen to not succeed when i.e microservice is down
+					   ![[Pasted image 20240805194355.png]]
+					- alternative approach is for the data consumer to maintain replica of the data. such replica is a cqrs view. data consumer keeps the replica 
+					- up to date by subcribing to a domain event published by the data provider
+					   it's better beacuse we can get rid of repeteadly quering from other service, but it's quite complex so we are adding complexity to our application. Potential challenge for monolith is to refactor it to publish events
+					- when implementing communication between two different domain models we need to implement Anti-corruption-layers
+					- (Anti-corruption-layer - software layer that translates between two different domain models in order to prevent concepts from one model polluting another)
+					- Implementing sagas for monolith
+					- Sequencing the extraction of services to avoid implementing compensating transactions in a monolith
+					- TODO continueeeeeeee
+
+
+
+
+
+
+

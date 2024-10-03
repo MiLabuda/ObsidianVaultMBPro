@@ -63,6 +63,7 @@ I started exploring this topic because I found an urge to build my microservices
 	- Transactions
 	- Event Sourcing
 	- **Most important rule while creating software: YAGNI (You aren't gonna need it)**
+	- We should always model our code with business language, not add product, createProduct, not add invoice. issueInvoice. not add cart. Open cart
 	- Know the cons of technics before you use it
 	- Use encapsulation whenever you can
 	- Small modules with nice API and with proper tests are always better than big ones
@@ -117,7 +118,7 @@ I started exploring this topic because I found an urge to build my microservices
 	   - it makes logic dependencies physiacal. It means if in Order we have customerId and in Customer we have the same information that if we change it in one place and won't change in the second than with Type identifier compiler will throw errors. The dependency is also physicall not only logical!!
 	   - with type identifgier we can validate our Id
 	   - Conclusion is that it;s good to use type identifier identity in our Entity
-9. When and where to determine the ID of an entity [ARTICLE](https://matthiasnoback.nl/2018/05/when-and-where-to-determine-the-id-of-an-entity/)
+9. When and where to determine the ID of an entity [ARTI3CLE](https://matthiasnoback.nl/2018/05/when-and-where-to-determine-the-id-of-an-entity/)
 	   -interesting design is to pass to the value object the id we want to declare. Because enity should not be aware of what id should be next in order. so we can implement in repository layer method nextIdentity() and from there take the next value which can be designed different for each storage system
 10. Domain Driven Design - Q&A Sławomir Sobótka [YOUTUBE](https://www.youtube.com/watch?v=do-xqIbKZ_8)
    - How to tell the boundaries of aggregates
@@ -147,11 +148,13 @@ I started exploring this topic because I found an urge to build my microservices
 		- provide encapsulation
 		- object should not be responsible for its own creation
 		- it important layer of abstraction
-		- 
+12. # Domain-Driven Design: Aggregates in Practice[ARTICLE](https://medium.com/@aforank/domain-driven-design-aggregates-in-practice-bcced7d21ae5)
+13. E commerce DDD [ARTICLE](https://falberthen.github.io/posts/ecommerceddd-pt1/)
 
 
 
-13. Problemy wynikające z modularyzacji - Łukasz Szydło
+
+15. Problemy wynikające z modularyzacji - Łukasz Szydło
 	--TODOoOOOOOOOOO
 1. Architektoniczne antywzorce czyli na co chorują aplikacje - Łukasz Szydło
 

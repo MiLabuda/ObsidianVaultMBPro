@@ -4,62 +4,18 @@
     "type": "split",
     "children": [
       {
-        "id": "cb0cc99f874f7ae0",
-        "type": "split",
+        "id": "20c62ddb1b85fad3",
+        "type": "tabs",
         "children": [
           {
-            "id": "20c62ddb1b85fad3",
-            "type": "tabs",
-            "dimension": 66.63414634146342,
-            "children": [
-              {
-                "id": "396aaa5e2dfb4ac4",
-                "type": "leaf",
-                "state": {
-                  "type": "markdown",
-                  "state": {
-                    "file": "Software Engineriing/Dashboard.md",
-                    "mode": "source",
-                    "source": false
-                  }
-                }
-              },
-              {
-                "id": "94a14dd68d4d1d00",
-                "type": "leaf",
-                "state": {
-                  "type": "markdown",
-                  "state": {
-                    "file": "Software Engineriing/Java Microservices.md",
-                    "mode": "source",
-                    "source": true
-                  }
-                }
-              }
-            ],
-            "currentTab": 1
-          },
-          {
-            "id": "4c03c44bda4d9f3b",
-            "type": "tabs",
-            "dimension": 33.36585365853659,
-            "children": [
-              {
-                "id": "86628c3b0327ef41",
-                "type": "leaf",
-                "state": {
-                  "type": "markdown",
-                  "state": {
-                    "file": "Software Engineriing/Design Patterns.md",
-                    "mode": "source",
-                    "source": false
-                  }
-                }
-              }
-            ]
+            "id": "978dfc75a1dcc67e",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
           }
-        ],
-        "direction": "horizontal"
+        ]
       }
     ],
     "direction": "vertical"
@@ -88,7 +44,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "ślusar",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -125,7 +81,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Software Engineriing/Java Microservices.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -142,7 +97,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Software Engineriing/Java Microservices.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -164,9 +118,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "Software Engineriing/Java Microservices.md"
-              }
+              "state": {}
             }
           }
         ]
@@ -186,45 +138,47 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "94a14dd68d4d1d00",
+  "active": "978dfc75a1dcc67e",
   "lastOpenFiles": [
-    "Pasted image 20240715194514.png",
-    "Pasted image 20240715185820.png",
-    "Pasted image 20240715185345.png",
-    "Software Engineriing/Dashboard.md",
-    "Software Engineriing/Java Microservices.md",
-    "Software Engineriing/Domain Driven Design.md",
-    "Pasted image 20240711224323.png",
-    "Pasted image 20240711211018.png",
-    "Software Engineriing/Get your hands dirty on clean architecture.md",
-    "Software Engineriing/Design Patterns.md",
-    "Pasted image 20240615101102.png",
     "Software Engineriing/Testing.md",
-    "Pasted image 20240613200751.png",
-    "Pasted image 20240613200121.png",
-    "Pasted image 20240613200030.png",
-    "Pasted image 20240613195845.png",
-    "wszib/Studies.md",
-    "123.pdf",
-    "Home.md",
-    "Pasted image 20240529205756.png",
-    "Software Engineriing/Hexagonal Architecture.md",
-    "Software Engineriing/Learning Domain Driven Design.md",
-    "templates-examples/Montly Note.md",
-    "Software Engineriing/Java Internals.md",
-    "Software Engineriing/Software engineriing.md",
-    "Software Engineriing/Docker.md",
-    "Software Engineriing/Kubernetes.md",
-    "Software Engineriing/Future setup.md",
-    "Software Engineriing/Effective Java.md",
-    "README.md",
-    "ObsidianVaultMBPro",
-    "Model.md",
-    "Model \"chair entity\".md",
-    "Journal/Weekly/2024-Week01.md",
     "Software Engineriing/SQL.md",
+    "Software Engineriing/Spring observability.md",
+    "Software Engineriing/Spring microservices in action.md",
     "Software Engineriing/Spring Framework.md",
+    "Software Engineriing/Spring Data.md",
+    "Software Engineriing/Spring Cloud Config Server - microservice.md",
+    "Software Engineriing/Software engineriing.md",
+    "Software Engineriing/Microservice chasis framework.md",
+    "Software Engineriing/Learning Domain Driven Design.md",
+    "Software Engineriing/Kubernetes.md",
     "Software Engineriing/Java Persistance API.md",
-    "Software Engineriing/Dive into refactoring.md"
+    "Software Engineriing/Java Microservices.md",
+    "Software Engineriing/Java Internals.md",
+    "Software Engineriing/Hexagonal Architecture.md",
+    "Software Engineriing/Get your hands dirty on clean architecture.md",
+    "Software Engineriing/Event Driven Architecture.md",
+    "Software Engineriing/Effective Java.md",
+    "Software Engineriing/Domain Driven Design.md",
+    "Software Engineriing/Docker.md",
+    "Software Engineriing/Dive into refactoring.md",
+    "Software Engineriing/Design Patterns.md",
+    "Software Engineriing/Dashboard.md",
+    "Software Engineriing/Algorithms Illuminated Part 1.md",
+    "SoftwareEngineeringNotes/Testing.md",
+    "SoftwareEngineeringNotes/SQL.md",
+    "SoftwareEngineeringNotes",
+    "Software Engineriing/SoftwareEngineeringNotes",
+    "Pasted image 20240925225354.png",
+    "Pasted image 20240925225350.png",
+    "Pasted image 20240911204814.png",
+    "Pasted image 20240911201753.png",
+    "Pasted image 20240911200657.png",
+    "Pasted image 20240908074550.png",
+    "Pasted image 20240907234950.png",
+    "Pasted image 20240907222758.png",
+    "Pasted image 20240907222749.png",
+    "Pasted_image_20240905160755.png",
+    "123.pdf",
+    "ObsidianVaultMBPro"
   ]
 }

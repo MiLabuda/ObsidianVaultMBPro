@@ -123,7 +123,7 @@
     - Inheritance is mechanism that allows one class to acquire the fields and methods of another class. Acquired fields and methods are know as superclass. Inheritance is used for code reusability. Java does not support multi-inheritance
     - Polymorphism is mechanism to allow objects to take on may forms. Parent class can reference 
     - --------------------
-21. How acn we compare variables in java
+21. How can we compare variables in java
     - primitives might be compared with relational operators (=, !=, >, <)
     - objects should be compared using equals() method to check if they are equal, this method should be overriden in the classes for correct comparisons
     - Objects.equals() method can be used which is null safe
